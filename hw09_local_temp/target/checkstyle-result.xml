@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<checkstyle version="9.2.1">
+<file name="C:\Users\jacob\Downloads\hw09_local\hw09_local_temp\src\main\java\org\cis1200\blockade\GameCourt.java">
+<error line="3" column="8" severity="warning" message="Unused import - org.cis1200.Game." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+</file>
+<file name="C:\Users\jacob\Downloads\hw09_local\hw09_local_temp\src\main\java\org\cis1200\blockade\GameState.java">
+<error line="4" column="8" severity="warning" message="Unused import - java.io.BufferedWriter." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="5" column="8" severity="warning" message="Unused import - java.io.File." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="6" column="8" severity="warning" message="Unused import - java.io.FileWriter." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="7" column="8" severity="warning" message="Unused import - java.io.IOException." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+<error line="8" column="8" severity="warning" message="Unused import - java.nio.file.Paths." source="com.puppycrawl.tools.checkstyle.checks.imports.UnusedImportsCheck"/>
+</file>
+<file name="C:\Users\jacob\Downloads\hw09_local\hw09_local_temp\src\main\java\org\cis1200\blockade\RunBlockade.java">
+<error line="67" severity="warning" message="Line is longer than 100 characters (found 104)." source="com.puppycrawl.tools.checkstyle.checks.sizes.LineLengthCheck"/>
+</file>
+</checkstyle>
