@@ -1,6 +1,6 @@
 package org.cis1200.blockade;
 
-import org.cis1200.Game;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -225,6 +225,13 @@ public class GameCourt extends JPanel {
 
     }
 
+    /*
+    This method is called when repainting the GameCourt component. It is used to make a rectangle
+    at coordinate (x, y) according to some width and height, then returns a coordinate (x + width, y)
+    to facilitate the next paint Rect iteration.
+    Color int:
+    0 is Gray for nothing, 1 is Green for player, 2 is Red for opponent
+     */
     private Coordinate paintRect(int color, Graphics g, int x, int y, int width, int height) {
         if (color == 0) {
             g.setColor(Color.LIGHT_GRAY);

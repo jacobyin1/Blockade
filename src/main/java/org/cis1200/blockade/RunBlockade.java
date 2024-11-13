@@ -35,10 +35,10 @@ public class RunBlockade implements Runnable {
         final JPanel control_panel = new JPanel();
         frame.add(control_panel, BorderLayout.NORTH);
 
-        // Note here that when we add an action listener to the reset button, we
-        // define it as an anonymous inner class that is an instance of
-        // ActionListener with its actionPerformed() method overridden. When the
-        // button is pressed, actionPerformed() will be called.
+        /*
+        Creates the toolbar of buttons and adds the corresponding listener
+        which calls the corresponding GameCourt method.
+        */
         final JButton reset = new JButton("Reset");
         reset.addActionListener(e -> court.reset());
         control_panel.add(reset);
@@ -71,36 +71,18 @@ public class RunBlockade implements Runnable {
         });
         control_panel.add(info);
 
-        JOptionPane optionPane = new JOptionPane();
-        JSlider slider = new JSlider();
-        slider.setMajorTickSpacing(1);
-        slider.setPaintTicks(true);
-        slider.setPaintLabels(true);
-        slider.setSnapToTicks(true);
-        slider.setValue(5);
-        slider.setMaximum(10);
-        ChangeListener changeListener = new ChangeListener() {
-            public void stateChanged(ChangeEvent changeEvent) {
-                JSlider theSlider = (JSlider) changeEvent.getSource();
-                if (!theSlider.getValueIsAdjusting()) {
-                    optionPane.setInputValue(Integer.valueOf(theSlider.getValue()));
-                }
-            }
-        };
-        slider.addChangeListener(changeListener);
-        optionPane.setMessage(new Object[] { "Select a speed: ", slider });
-        optionPane.setMessageType(JOptionPane.QUESTION_MESSAGE);
-        optionPane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
 
-        final JButton speed = new JButton("Settings");
-        speed.addActionListener(e -> {
-            JDialog dialog = optionPane.createDialog(frame, "Settings");
+        JOptionPane speedOptionPane = makeSpeedOptionPane();
+
+        final JButton settings = new JButton("Settings");
+        settings.addActionListener(e -> {
+            JDialog dialog = speedOptionPane.createDialog(frame, "Settings");
             dialog.setVisible(true);
-            if (optionPane.getInputValue().getClass() != "".getClass()) {
-                court.setTimer(2000 / ((int) optionPane.getInputValue() + 1));
+            if (speedOptionPane.getInputValue().getClass() != "".getClass()) {
+                court.setTimer(2000 / ((int) speedOptionPane.getInputValue() + 1));
             }
         });
-        control_panel.add(speed);
+        control_panel.add(settings);
 
         // final JButton load = new JButton("Load");
         // load.addActionListener(e -> court = new GameCourt());
@@ -113,5 +95,27 @@ public class RunBlockade implements Runnable {
 
         // Start game
         court.reset();
+    }
+
+    private static JOptionPane makeSpeedOptionPane() {
+        JOptionPane optionPane = new JOptionPane();
+        JSlider slider = new JSlider();
+        slider.setMajorTickSpacing(1);
+        slider.setPaintTicks(true);
+        slider.setPaintLabels(true);
+        slider.setSnapToTicks(true);
+        slider.setValue(5);
+        slider.setMaximum(10);
+        ChangeListener changeListener = changeEvent -> {
+            JSlider theSlider = (JSlider) changeEvent.getSource();
+            if (!theSlider.getValueIsAdjusting()) {
+                optionPane.setInputValue(Integer.valueOf(theSlider.getValue()));
+            }
+        };
+        slider.addChangeListener(changeListener);
+        optionPane.setMessage(new Object[] { "Select a speed: ", slider });
+        optionPane.setMessageType(JOptionPane.QUESTION_MESSAGE);
+        optionPane.setOptionType(JOptionPane.OK_CANCEL_OPTION);
+        return optionPane;
     }
 }

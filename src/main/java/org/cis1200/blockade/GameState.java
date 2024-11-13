@@ -54,11 +54,11 @@ public class GameState {
             return Direction.UP;
         }
         Direction[] ds = bot.getCurrentDirection().nonOpposite();
-        System.out.println("loop");
+        //System.out.println("loop");
         int dir1Val = botSearchRecWrap(1, true, ds[0], boardClone);
         int dir2Val = botSearchRecWrap(1, true, ds[1], boardClone);
         int dir3Val = botSearchRecWrap(1, true, ds[2], boardClone);
-        System.out.println(ds[0] + ": " + dir1Val + ", " + ds[1] + ": " + dir2Val + ", " + ds[2] + ": " + dir3Val);
+        //System.out.println(ds[0] + ": " + dir1Val + ", " + ds[1] + ": " + dir2Val + ", " + ds[2] + ": " + dir3Val);
         if (dir1Val >= dir2Val && dir1Val >= dir3Val) {
             return ds[0];
         }
@@ -68,7 +68,11 @@ public class GameState {
         return ds[2];
 
     }
-
+    /*
+    This method is a wrapper for botSearchRec. It calls botSearchRec, then reverts the boardClone
+    and character back to their original states, allowing for the recursive calculation to
+    continue using the same array.
+     */
     private int botSearchRecWrap(int level, boolean botTurn, Direction d, int[][] boardClone) {
         Character target;
         if (botTurn) {
@@ -94,7 +98,22 @@ public class GameState {
         target.setCurrentDirection(initial);
         return i;
     }
-
+    /*
+    Base cases:
+        If the heads run into each other, that will be a high reward.
+        If the search depth is reached, the distance to the human should be minimized.
+    Bot turn:
+        If bot died, return a very negative score
+        Recursive case:
+            Consider each way the human can move recursively. Assuming the human calculates up to
+            searchDepth, the worst he can do to the bot is the minimum direction value of the
+            three states.
+    Human turn:
+        If the human died, return a very positive score.
+        Recursive case:
+            Consider each way that the bot can now move. The bot will choose the optimal up to
+            searchDepth, and thus the maximum direction value.
+     */
     private int botSearchRec(int level, boolean botTurn, int[][] boardClone) {
         boolean hAlive = human.isAlive(boardClone);
         boolean bAlive = bot.isAlive(boardClone);
@@ -107,6 +126,8 @@ public class GameState {
         if (level == searchDepth) {
             return 100 - h.dist(b);
         }
+
+
         if (botTurn) {
             if (!bAlive) {
                 return -999 + level;
