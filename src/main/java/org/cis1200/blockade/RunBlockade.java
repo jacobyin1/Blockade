@@ -52,14 +52,21 @@ public class RunBlockade implements Runnable {
         control_panel.add(resume);
 
         final JButton save = new JButton("Save");
-        save.addActionListener(e -> {
-            try {
-                court.save();
-            } catch (IOException exc) {
-                JOptionPane.showMessageDialog(frame, exc.getMessage());
-            }
-        });
+        save.addActionListener(e -> court.save());
         control_panel.add(save);
+
+        final JButton load = new JButton("Load");
+        load.addActionListener(e -> {
+            try {
+                court.load();
+            } catch (Exception exception) {
+                JOptionPane.showMessageDialog(
+                        frame, "FIX THE FORMAT OF THE SAVE FILE"
+                );
+            }
+
+        });
+        control_panel.add(load);
 
         final JButton info = new JButton("Info");
         info.addActionListener(e -> {
@@ -84,9 +91,6 @@ public class RunBlockade implements Runnable {
         });
         control_panel.add(settings);
 
-        // final JButton load = new JButton("Load");
-        // load.addActionListener(e -> court = new GameCourt());
-        // control_panel.add(load);
 
         // Put the frame on the screen
         frame.pack();

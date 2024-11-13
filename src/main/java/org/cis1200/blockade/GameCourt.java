@@ -2,12 +2,17 @@ package org.cis1200.blockade;
 
 
 
+import com.opencsv.CSVReader;
+import com.opencsv.CSVWriter;
+import com.opencsv.exceptions.CsvValidationException;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.*;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
 /**
  * GameCourt
@@ -117,44 +122,60 @@ public class GameCourt extends JPanel {
         username = s;
     }
 
-    public void save() throws IOException {
-        String filePath = "files/saved_game.txt";
+    public void save() {
+        String filePath = "files/saved_game.csv";
         File file = Paths.get(filePath).toFile();
-        BufferedWriter bw;
         try {
-            bw = new BufferedWriter(new FileWriter(file, false));
+            FileWriter output = new FileWriter(file);
+            CSVWriter outputcsv = new CSVWriter(output);
+            String[] line1 = {username, String.valueOf(time)};
+            outputcsv.writeNext(line1);
+            outputcsv.writeAll(Arrays.asList(gs.saveBoard()));
+            outputcsv.writeNext(gs.saveCharacters());
+            outputcsv.close();
         } catch (IOException e) {
-            throw new IOException("Failed to create writer");
+            e.printStackTrace();
         }
-        try {
-            bw.write(this.toString());
-        } catch (IOException e) {
-            throw new IOException("Failed to write");
-        } finally {
-            try {
-                bw.flush();
-                bw.close();
-            } catch (IOException e) {
-                throw new IOException("Failed to close");
-            }
-        }
+        paused = true;
+        requestFocusInWindow();
     }
 
-    @Override
-    public String toString() {
-        return "GameCourt{" +
-                "boardHeight=" + boardHeight +
-                ", boardWidth=" + boardWidth +
-                ", username='" + username + '\'' +
-                ", interval=" + interval +
-                ", \ngs=" + gs +
-                ", \nuserDirection=" + userDirection +
-                ", paused=" + paused +
-                ", time=" + time +
-                ", \nstatus=" + status.getText() +
-                ", blockWidth=" + blockWidth +
-                ", separator=" + separator +
-                '}';
+    public void load() throws NullPointerException, IOException, CsvValidationException {
+        String filePath = "files/saved_game.csv";
+        File file = Paths.get(filePath).toFile();
+        FileReader filereader = new FileReader(file);
+        CSVReader csvread = new CSVReader(filereader);
+
+        String[] line1 = csvread.readNext();
+        String[][] gsString = new String[boardHeight][boardWidth];
+        for (int h = 0; h < boardHeight; h++) {
+            gsString[h] = csvread.readNext();
+        }
+        String[] lineLast = csvread.readNext();
+
+        username = line1[0];
+        time = Double.parseDouble(line1[1]);
+        int[][] gsInt = new int[gsString.length][gsString[0].length];
+        for (int i = 0; i < gsString.length; i++) {
+            for (int j = 0; j < gsString[i].length; j++) {
+                gsInt[i][j] = Integer.parseInt(gsString[i][j]);
+            }
+        }
+
+        int x1 = Integer.parseInt(lineLast[0]);
+        int y1 = Integer.parseInt(lineLast[1]);
+        int x2 = Integer.parseInt(lineLast[2]);
+        int y2 = Integer.parseInt(lineLast[3]);
+
+        gs = new GameState(boardHeight, boardWidth, username, gsInt,
+                new Coordinate(x1, y1), new Coordinate(x2, y2));
+        userDirection = null;
+        timer.stop();
+        timer = new Timer(interval, e -> tick());
+        timer.start();
+        status.setText("Game reloaded!");
+        requestFocusInWindow();
+
     }
 
     public void pause() {

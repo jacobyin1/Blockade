@@ -37,6 +37,16 @@ public class GameState {
         searchDepth = 7;
     }
 
+    public GameState(int dimX, int dimY, String username, int[][] board, Coordinate start1, Coordinate start2) {
+        this.board = board;
+        bot = new Character(start1, Color.RED, "Bot 1");
+        human = new Character(start2, Color.GREEN, username);
+        fill(start1, 2);
+        fill(start2, 1);
+        state = State.Start;
+        searchDepth = 7;
+    }
+
     public int[][] getBoard() {
         int cols = board[0].length;
         int[][] boardClone = new int[board.length][cols];
@@ -199,5 +209,25 @@ public class GameState {
                 "\n" + human +
                 "\n" + state +
                 "," + searchDepth;
+    }
+
+    public String[][] saveBoard() {
+        String[][] s = new String[board.length][board[0].length];
+        for (int i = 0; i < s.length; i++) {
+            for (int j = 0; j < s[i].length; j++) {
+                s[i][j] = String.valueOf(board[i][j]);
+            }
+        }
+        return s;
+    }
+    public String[] saveCharacters() {
+        Coordinate botC = bot.getCurrent();
+        Coordinate humanC = human.getCurrent();
+        int[] is = {botC.x(), botC.y(), humanC.x(), humanC.y()};
+        String[] s = new String[is.length];
+        for (int i = 0; i < is.length; i++) {
+            s[i] = String.valueOf(is[i]);
+        }
+        return s;
     }
 }
