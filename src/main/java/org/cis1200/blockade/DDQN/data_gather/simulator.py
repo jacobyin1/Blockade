@@ -1,10 +1,5 @@
 import numpy as np
-import matplotlib.pyplot as plt
-import torch
 from matplotlib import colormaps, animation
-
-from src.main.java.org.cis1200.blockade.DDQN.environment import Environment
-from src.main.java.org.cis1200.blockade.DDQN.experience_replay import ExperienceReplay
 
 
 def simulate(fig, ax, states):

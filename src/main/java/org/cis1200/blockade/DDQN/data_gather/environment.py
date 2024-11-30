@@ -50,12 +50,12 @@ class Environment:
         return x, y
 
     # returns list of transition:
-    # initial state, action, opponent action (None if the game is over by then), reward, next state (None if game ended)
-    # 2 is a special number to represent the game having terminated earlier
+    # initial state, action, opponent action, reward, next state
+    # If the game has ended, the s2 is returned filled with zeros so that the nn gives it q of 0
 
     def step(self, qmodel):
         s_o = self.get_state()
-        o = qmodel.predict(s_o)
+        o = qmodel.predict(s_o.type(torch.float32))
         char1_status = self.__step_helper(o)
         if self.prev_state is None:
             self.prev_state = s_o
@@ -63,15 +63,19 @@ class Environment:
             return self.step(qmodel)
         transitions = []
         if char1_status == Status.DEAD:
-            t1 = self.prev_state, self.prev_action, o, 1, torch.full_like(self.prev_state, 2)
-            t2 = s_o, o, torch.full_like(o, 2), -1, torch.full_like(self.prev_state, 2)
+            t1 = self.prev_state, self.prev_action, o, 1, torch.zeros_like(self.prev_state)
             transitions.append(t1)
-            transitions.append(t2)
+            actions_possible = torch.eye(4, dtype=torch.uint8)
+            for i in range(4):
+                t = s_o, o, actions_possible[i], -1, torch.zeros_like(self.prev_state)
+                transitions.append(t)
         elif char1_status == Status.TIED:
-            t1 = self.prev_state, self.prev_action, o, 0, torch.full_like(self.prev_state, 2)
-            t2 = s_o, o, torch.full_like(o, 2), 0, torch.full_like(self.prev_state, 2)
+            t1 = self.prev_state, self.prev_action, o, 0, torch.zeros_like(self.prev_state)
             transitions.append(t1)
-            transitions.append(t2)
+            actions_possible = torch.eye(4, dtype=torch.uint8)
+            for i in range(4):
+                t = s_o, o, actions_possible[i], 0, torch.zeros_like(self.prev_state)
+                transitions.append(t)
         else:
             t = self.prev_state, self.prev_action, o, 0, self.get_state()
             transitions.append(t)

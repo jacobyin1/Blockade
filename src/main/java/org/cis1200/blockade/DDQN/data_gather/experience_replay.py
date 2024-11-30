@@ -38,9 +38,9 @@ class ExperienceReplay:
             obs.extend(observation)
         self.env.reset()
         s1, _, _, _, _ = zip(*obs)
-        indices = np.arange(len(s1), step=2)
+        indices = np.arange(len(s1) - 4, step=2)
         boards = np.zeros((indices.shape[0], self.env.board_length, self.env.board_length), dtype=np.uint8)
         for i, i_value in enumerate(indices):
             boards[i] = self.env.prettify_state(s1[i_value]).numpy()
-        return boards
+        return boards[:boards.shape[0]]
 
