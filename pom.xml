@@ -30,8 +30,19 @@
       <artifactId>opencsv</artifactId>
       <version>5.9</version>
     </dependency>
-
+    <dependency>
+      <groupId>io.jhdf</groupId>
+      <artifactId>jhdf</artifactId>
+      <version>0.6.4</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.nd4j/nd4j-native -->
+    <dependency>
+      <groupId>org.nd4j</groupId>
+      <artifactId>nd4j-native</artifactId>
+      <version>1.0.0-M1.1</version>
+    </dependency>
   </dependencies>
+
 
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
@@ -169,7 +180,6 @@
         <version>2.13.0</version>
         <configuration>
           <configFile>https://www.seas.upenn.edu/~cis120/current/files/formatter-config.xml</configFile>
-          <overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
           <compilerSource>17</compilerSource>
           <compilerCompliance>17</compilerCompliance>
           <compilerTargetPlatform>17</compilerTargetPlatform>
@@ -189,16 +199,6 @@
             </reports>
           </reportSet>
         </reportSets>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jxr-plugin</artifactId>
-        <version>2.3</version>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <version>2.12.4</version>
       </plugin>
     </plugins>
   </reporting>

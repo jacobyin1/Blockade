@@ -28,7 +28,7 @@ public class RunBlockade implements Runnable {
         status_panel.add(status);
 
         // Main playing area
-        final GameCourt court = new GameCourt(status, 20, 20, "Player", 250);
+        final GameCourt court = new GameCourt(status, 20, 20, "Player", 250, true);
         frame.add(court, BorderLayout.CENTER);
 
         // Reset button

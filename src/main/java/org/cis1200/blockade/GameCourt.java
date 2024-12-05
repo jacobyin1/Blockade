@@ -47,9 +47,11 @@ public class GameCourt extends JPanel {
     final private int blockWidth;
     final private int separator;
 
+    private boolean useBotNet;
+
     public GameCourt(
             JLabel status, int boardHeight, int boardWidth,
-            String username, int interval
+            String username, int interval, boolean useBotNet
     ) {
         time = 0;
         blockWidth = 20;
@@ -58,6 +60,7 @@ public class GameCourt extends JPanel {
         this.boardWidth = boardWidth;
         this.username = username;
         this.interval = interval;
+        this.useBotNet = useBotNet;
 
         gs = new GameState(boardHeight, boardWidth, username);
         // creates border around the court area, JComponent method
@@ -202,7 +205,7 @@ public class GameCourt extends JPanel {
             return;
         }
         if (userDirection != null) {
-            gs.move(userDirection);
+            gs.move(userDirection, useBotNet);
             time = (double) Math.round(10 * (time + (double) interval / 1000)) / 10;
         }
         GameState.State state1 = gs.getState();

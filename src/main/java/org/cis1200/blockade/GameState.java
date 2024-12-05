@@ -9,6 +9,8 @@ import java.nio.file.Paths;
 import java.util.Arrays;
 
 public class GameState {
+
+    private BotNet botNet;
     private int[][] board;
     private Character bot;
     private Character human;
@@ -35,6 +37,7 @@ public class GameState {
         fill(start2, 1);
         state = State.Start;
         searchDepth = 7;
+        botNet = new BotNet();
     }
 
     public GameState(int dimX, int dimY, String username, int[][] board, Coordinate start1, Coordinate start2) {
@@ -55,6 +58,7 @@ public class GameState {
         }
         return boardClone;
     }
+
 
     // Recursive algorithm to determine best bot move
     private Direction botSearch() {
@@ -164,8 +168,12 @@ public class GameState {
 
     }
 
-    public void move(Direction d) {
-        move(d, botSearch());
+    public void move(Direction d, boolean useBotNet) {
+        if (useBotNet) {
+            move(d, botNet.getMove(getBoard(), bot.getCurrent(), human.getCurrent()));
+        } else {
+            move(d, botSearch());
+        }
     }
 
     private void move(Direction dHuman, Direction dBot) {
